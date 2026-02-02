@@ -1,3 +1,6 @@
+SET
+    search_path TO @@DATABASE_SCHEMA@@;
+
 -- Remove numspell extension dependency (was: CREATE EXTENSION IF NOT EXISTS "numspell");
 -- Labels will be generated without converting numbers to words to keep portability across PostgreSQL installs.
 

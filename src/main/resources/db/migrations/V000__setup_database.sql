@@ -2,7 +2,8 @@
 -- SISTEMA DE AUDITORÍA AUTOMÁTICA PARA POSTGRESQL 16+
 -- Versión Simplificada y Funcional
 -- ============================================================================
-
+SET
+    search_path TO @@DATABASE_SCHEMA@@;
 -- ----------------------------------------------------------------------------
 -- PASO 1: FUNCIONES TRIGGER PARA TIMESTAMPS
 -- ----------------------------------------------------------------------------
@@ -293,7 +294,7 @@ $$;
 -- Aplicar a tabla específica manualmente
 CREATE OR REPLACE FUNCTION apply_audit_to_table(
     p_table_name TEXT,
-    p_schema_name TEXT DEFAULT 'public'
+    p_schema_name TEXT DEFAULT '@@DATABASE_SCHEMA@@'
 )
     RETURNS TEXT
     LANGUAGE plpgsql AS
@@ -309,7 +310,7 @@ $$;
 
 -- Aplicar a todas las tablas existentes
 CREATE OR REPLACE FUNCTION apply_audit_to_all_tables(
-    p_schema_name TEXT DEFAULT 'public'
+    p_schema_name TEXT DEFAULT '@@DATABASE_SCHEMA@@'
 )
     RETURNS TABLE
             (
@@ -447,7 +448,7 @@ SELECT enable_auto_audit();
 --    WHERE table_name = 'mi_tabla';
 --
 -- PARA APLICAR A TABLAS EXISTENTES:
---    SELECT * FROM apply_audit_to_all_tables('public');
+--    SELECT * FROM apply_audit_to_all_tables('@@DATABASE_SCHEMA@@');
 --
 -- PARA HABILITAR/DESHABILITAR:
 --    SELECT enable_auto_audit();

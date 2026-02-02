@@ -1,3 +1,6 @@
+SET
+    search_path TO @@DATABASE_SCHEMA@@;
+
 -- Fix UNION type mismatch by casting literals to time_period_type
 WITH constants AS (SELECT 5                          AS max_years_value,
                           'YEARLY'::time_period_type AS yearly_period)

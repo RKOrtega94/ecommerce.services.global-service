@@ -1,3 +1,6 @@
+SET
+    search_path TO @@DATABASE_SCHEMA@@;
+
 CREATE TABLE cities
 (
     id         UUID                        NOT NULL,
