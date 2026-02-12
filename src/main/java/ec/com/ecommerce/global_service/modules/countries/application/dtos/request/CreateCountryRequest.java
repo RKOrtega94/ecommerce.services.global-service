@@ -1,5 +1,7 @@
 package ec.com.ecommerce.global_service.modules.countries.application.dtos.request;
 
+import lombok.Builder;
+
 /**
  * CreateCountryRequest
  *
@@ -9,6 +11,8 @@ package ec.com.ecommerce.global_service.modules.countries.application.dtos.reque
  * @param currency       country currency
  * @param currencySymbol country currency symbol
  */
-public record CreateCountryRequest(String name, String code, String phoneCode, String currency, String currencySymbol) {
+@Builder
+public record CreateCountryRequest(String name, String code, String phoneCode, String currency, String currencySymbol,
+                                   String currencyCode, String flag) {
 }
 

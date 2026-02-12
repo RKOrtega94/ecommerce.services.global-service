@@ -1,13 +1,13 @@
 package ec.com.ecommerce.global_service.modules.states.adapter.rest;
 
-import ec.com.ecommerce.models.ApiResponse;
-import ec.com.ecommerce.models.PaginationResponse;
-import ec.com.ecommerce.models.SuccessEmptyResponse;
-import ec.com.ecommerce.models.SuccessResponse;
 import ec.com.ecommerce.global_service.modules.states.application.dtos.request.CreateStateRequest;
 import ec.com.ecommerce.global_service.modules.states.application.dtos.request.UpdateStateRequest;
 import ec.com.ecommerce.global_service.modules.states.application.dtos.response.StateResponse;
 import ec.com.ecommerce.global_service.modules.states.application.services.StateService;
+import ec.com.ecommerce.models.ApiResponse;
+import ec.com.ecommerce.models.PaginationResponse;
+import ec.com.ecommerce.models.SuccessEmptyResponse;
+import ec.com.ecommerce.models.SuccessResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +41,14 @@ public class StateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> findById(@PathVariable("id") UUID id) {
+    public ResponseEntity<ApiResponse> findById(@PathVariable UUID id) {
         var state = service.retrieve(id);
         SuccessResponse<StateResponse> response = SuccessResponse.ok(state, "State retrieved successfully");
         return ResponseEntity.ok(response);
     }
 
     @PutMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> updateForm(@PathVariable("id") UUID id, @ModelAttribute @Valid UpdateStateRequest request) {
+    public ResponseEntity<ApiResponse> updateForm(@PathVariable UUID id, @ModelAttribute @Valid UpdateStateRequest request) {
         service.update(id, request);
         SuccessEmptyResponse response = SuccessEmptyResponse.ok("State updated successfully");
         return ResponseEntity.ok(response);

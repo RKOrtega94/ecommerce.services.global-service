@@ -13,8 +13,9 @@ import java.util.UUID;
  * @param phoneCode      country phone code
  * @param currency       country currency
  * @param currencySymbol country currency symbol
+ * @param flag           country flag
  * @param status         country status
  */
 public record CountryResponse(UUID id, String name, String code, String phoneCode, String currency,
-                              String currencySymbol, Status status) {
+                              String currencySymbol, String flag, Status status) {
 }

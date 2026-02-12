@@ -1,17 +1,19 @@
 package ec.com.ecommerce.global_service.modules.countries.adapter.rest;
 
-import ec.com.ecommerce.models.ApiResponse;
-import ec.com.ecommerce.models.PaginationResponse;
-import ec.com.ecommerce.models.SuccessEmptyResponse;
-import ec.com.ecommerce.models.SuccessResponse;
 import ec.com.ecommerce.global_service.modules.countries.application.dtos.request.CreateCountryRequest;
 import ec.com.ecommerce.global_service.modules.countries.application.dtos.request.UpdateCountryRequest;
 import ec.com.ecommerce.global_service.modules.countries.application.dtos.response.CountryResponse;
 import ec.com.ecommerce.global_service.modules.countries.application.service.CountryService;
+import ec.com.ecommerce.models.ApiResponse;
+import ec.com.ecommerce.models.PaginationResponse;
+import ec.com.ecommerce.models.SuccessEmptyResponse;
+import ec.com.ecommerce.models.SuccessResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,13 +28,16 @@ import static org.springframework.http.MediaType.*;
 public class CountryController {
     private final CountryService service;
 
+    @PreAuthorize("hasAuthority('CREATE_COUNTRY')")
     @PostMapping(consumes = {MULTIPART_FORM_DATA_VALUE, APPLICATION_FORM_URLENCODED_VALUE}, produces = APPLICATION_JSON_VALUE)
+    @Operation(summary = "Create a new country")
     public ResponseEntity<ApiResponse> createForm(@ModelAttribute @Valid CreateCountryRequest request) {
         service.save(request);
         SuccessEmptyResponse response = SuccessEmptyResponse.created("Country created successfully");
         return ResponseEntity.status(response.status()).body(response);
     }
 
+    @PreAuthorize("hasAuthority('CREATE_COUNTRY')")
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> createJson(@RequestBody @Valid CreateCountryRequest request) {
         service.save(request);
@@ -40,8 +45,17 @@ public class CountryController {
         return ResponseEntity.status(response.status()).body(response);
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_COUNTRY')")
     @PutMapping(value = "/{id}", consumes = {MULTIPART_FORM_DATA_VALUE, APPLICATION_FORM_URLENCODED_VALUE}, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<ApiResponse> updateForm(@PathVariable("id") UUID id, @ModelAttribute @Valid UpdateCountryRequest request) {
+    public ResponseEntity<ApiResponse> updateForm(@PathVariable UUID id, @ModelAttribute @Valid UpdateCountryRequest request) {
+        service.update(id, request);
+        SuccessEmptyResponse response = SuccessEmptyResponse.ok("Country updated successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE_COUNTRY')")
+    @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> updateJson(@PathVariable UUID id, @RequestBody @Valid UpdateCountryRequest request) {
         service.update(id, request);
         SuccessEmptyResponse response = SuccessEmptyResponse.ok("Country updated successfully");
         return ResponseEntity.ok(response);
@@ -55,14 +69,15 @@ public class CountryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> findById(@PathVariable("id") UUID id) {
+    public ResponseEntity<ApiResponse> findById(@PathVariable UUID id) {
         var country = service.findById(id);
         SuccessResponse<CountryResponse> response = SuccessResponse.ok(country, "Country retrieved successfully");
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAuthority('DELETE_COUNTRY')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
